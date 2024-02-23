@@ -1,4 +1,4 @@
-import { Box, Button, Container, Heading, Input, Select, Stack, Text, Textarea, useToast } from "@chakra-ui/react";
+import { Box, Button, Container, Heading, Input, Select, Stack, Text, Textarea, useToast, VStack } from "@chakra-ui/react";
 import { FaLock, FaUnlock } from "react-icons/fa";
 import { useState } from "react";
 
@@ -8,6 +8,7 @@ const Index = () => {
   const [solution, setSolution] = useState(null);
   const [cipherText, setCipherText] = useState("");
   const [plainText, setPlainText] = useState("");
+  const [encryptionKey, setEncryptionKey] = useState("");
   const [encryptionMethod, setEncryptionMethod] = useState(encryptionMethods[0]);
   const toast = useToast();
 
@@ -25,8 +26,9 @@ const Index = () => {
     });
   };
 
-  // Encryption function that uses the selected encryption method
-  const encryptText = (text, shift, method) => {
+  // Updated encryption function that uses the selected encryption method and key
+  const encryptText = (text, key, method) => {
+    let shift = parseInt(key, 10) || 0;
     let encrypted = "";
     switch (method) {
       case "Shift Cipher":
@@ -44,8 +46,9 @@ const Index = () => {
     setCipherText(encrypted);
   };
 
-  // Decryption function that uses the selected encryption method
-  const decryptText = (text, shift, method) => {
+  // Updated decryption function that uses the selected encryption method and key
+  const decryptText = (text, key, method) => {
+    let shift = parseInt(key, 10) || 0;
     let decrypted = "";
     switch (method) {
       case "Shift Cipher":
@@ -86,12 +89,13 @@ const Index = () => {
             </option>
           ))}
         </Select>
-        <Textarea placeholder="Enter text to encrypt" value={plainText} onChange={(e) => setPlainText(e.target.value)} isDisabled={solution === null || encryptionMethod === ""} />
-        <Button leftIcon={<FaLock />} colorScheme="green" onClick={() => encryptText(plainText, solution, encryptionMethod)} isDisabled={solution === null || encryptionMethod === ""}>
+        <Input placeholder="Enter an encryption key" value={encryptionKey} onChange={(e) => setEncryptionKey(e.target.value)} isDisabled={encryptionMethod === ""} />
+        <Textarea placeholder="Enter text to encrypt" value={plainText} onChange={(e) => setPlainText(e.target.value)} isDisabled={encryptionMethod === ""} />
+        <Button leftIcon={<FaLock />} colorScheme="green" onClick={() => encryptText(plainText, encryptionKey, encryptionMethod)} isDisabled={encryptionMethod === ""}>
           Encrypt Text
         </Button>
-        <Textarea placeholder="Enter text to decrypt" value={cipherText} onChange={(e) => setCipherText(e.target.value)} isDisabled={solution === null} />
-        <Button leftIcon={<FaUnlock />} colorScheme="orange" onClick={() => decryptText(cipherText, solution, encryptionMethod)} isDisabled={solution === null || encryptionMethod === ""}>
+        <Textarea placeholder="Enter text to decrypt" value={cipherText} onChange={(e) => setCipherText(e.target.value)} isDisabled={encryptionMethod === ""} />
+        <Button leftIcon={<FaUnlock />} colorScheme="orange" onClick={() => decryptText(cipherText, encryptionKey, encryptionMethod)} isDisabled={encryptionMethod === ""}>
           Decrypt Text
         </Button>
         <Box>
