@@ -50,7 +50,8 @@ const Index = () => {
     return `lattice-${text}`;
   };
 
-  const encryptText = (text, key, method) => {
+  const encryptText = (text, key, method, isEquation = false) => {
+    text = isEquation ? equation : text;
     const t = text
       .split("")
       .map((char) => char.charCodeAt(0))
@@ -108,7 +109,7 @@ const Index = () => {
         </Select>
         <Input placeholder="Enter an encryption key" value={encryptionKey} onChange={(e) => setEncryptionKey(e.target.value)} isDisabled={encryptionMethod === ""} />
         <Textarea placeholder="Enter text to encrypt" value={plainText} onChange={(e) => setPlainText(e.target.value)} isDisabled={encryptionMethod === ""} />
-        <Button leftIcon={<FaLock />} colorScheme="green" onClick={() => encryptText(plainText, encryptionKey, encryptionMethod)} isDisabled={encryptionMethod === ""}>
+        <Button leftIcon={<FaLock />} colorScheme="green" onClick={() => encryptText(plainText, encryptionKey, encryptionMethod, true)} isDisabled={encryptionMethod === ""}>
           Encrypt Text
         </Button>
         <Textarea placeholder="Enter text to decrypt" value={cipherText} onChange={(e) => setCipherText(e.target.value)} isDisabled={encryptionMethod === ""} />
