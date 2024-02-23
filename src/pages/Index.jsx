@@ -45,7 +45,7 @@ const Index = () => {
     <Container maxW="container.md" py={10}>
       <Stack spacing={5}>
         <Heading as="h1">Equation Solver & Cipher Tool</Heading>
-        <Text>Enter an n-dimensional equation to solve:</Text>
+        <Text>Enter an equation or function to solve:</Text>
         <Input placeholder="e.g., x^2 + y^2 = z^2" value={equation} onChange={(e) => setEquation(e.target.value)} />
         <Button colorScheme="blue" onClick={() => solveEquation(equation)}>
           Solve Equation
