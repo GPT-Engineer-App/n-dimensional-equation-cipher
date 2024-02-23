@@ -51,31 +51,25 @@ const Index = () => {
   };
 
   // Updated encryption function that uses the selected encryption method and key
-  const encryptText = (text, key, method) => {
+  const encryptText = (text, k, method) => {
     // Convert input text to Unicode numbers
-    const unicodeText = text
+    const t = text
       .split("")
       .map((char) => char.charCodeAt(0))
       .join(" ");
     let encrypted = "";
     switch (method) {
       case "Shift Cipher":
-        encrypted = unicodeText
+        encrypted = t
           .split(" ")
-          .map((num) => String.fromCharCode((parseInt(num, 10) + parseInt(key, 10)) % 256))
+          .map((num) => String.fromCharCode((parseInt(num, 10) + parseInt(k, 10)) % 256))
           .join("");
         break;
       case "Reverse Cipher":
-        encrypted = unicodeText.split("").reverse().join("");
-        break;
-      case "RSA Cipher":
-        encrypted = rsaEncrypt(unicodeText, key);
-        break;
-      case "Lattice Cipher":
-        encrypted = latticeEncrypt(unicodeText, key);
+        encrypted = t.split(" ").reverse().join("");
         break;
       default:
-        encrypted = unicodeText; // In case no encryption method is selected
+        encrypted = t; // In case no encryption method is selected
         break;
     }
     setCipherText(encrypted);
@@ -83,8 +77,8 @@ const Index = () => {
   // Removed the duplicate definition of encryptText function
 
   // Updated decryption function that uses the selected encryption method and key
-  const decryptText = (text, key, method) => {
-    let shift = parseInt(key, 10) || 0;
+  const decryptText = (text, k, method) => {
+    let shift = parseInt(k, 10) || 0;
     let decrypted = "";
     switch (method) {
       case "Shift Cipher":
