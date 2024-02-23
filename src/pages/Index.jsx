@@ -1,12 +1,14 @@
-import { Box, Button, Container, Heading, Input, Stack, Text, Textarea, useToast } from "@chakra-ui/react";
+import { Box, Button, Container, Heading, Input, Select, Stack, Text, Textarea, useToast } from "@chakra-ui/react";
 import { FaLock, FaUnlock } from "react-icons/fa";
 import { useState } from "react";
 
 const Index = () => {
+  const encryptionMethods = ["Shift Cipher", "Reverse Cipher"];
   const [equation, setEquation] = useState("");
   const [solution, setSolution] = useState(null);
   const [cipherText, setCipherText] = useState("");
   const [plainText, setPlainText] = useState("");
+  const [encryptionMethod, setEncryptionMethod] = useState(encryptionMethods[0]);
   const toast = useToast();
 
   // Dummy function to 'solve' an equation (for demonstration purposes)
@@ -23,20 +25,40 @@ const Index = () => {
     });
   };
 
-  // Dummy encryption function using a simple shift cipher based on the solution
-  const encryptText = (text, shift) => {
+  // Encryption function that uses the selected encryption method
+  const encryptText = (text, shift, method) => {
     let encrypted = "";
-    for (let i = 0; i < text.length; i++) {
-      encrypted += String.fromCharCode((text.charCodeAt(i) + shift) % 256);
+    switch (method) {
+      case "Shift Cipher":
+        for (let i = 0; i < text.length; i++) {
+          encrypted += String.fromCharCode((text.charCodeAt(i) + shift) % 256);
+        }
+        break;
+      case "Reverse Cipher":
+        encrypted = text.split("").reverse().join("");
+        break;
+      default:
+        encrypted = text; // In case no encryption method is selected
+        break;
     }
     setCipherText(encrypted);
   };
 
-  // Dummy decryption function using a simple shift cipher based on the solution
-  const decryptText = (text, shift) => {
+  // Decryption function that uses the selected encryption method
+  const decryptText = (text, shift, method) => {
     let decrypted = "";
-    for (let i = 0; i < text.length; i++) {
-      decrypted += String.fromCharCode((text.charCodeAt(i) - shift + 256) % 256);
+    switch (method) {
+      case "Shift Cipher":
+        for (let i = 0; i < text.length; i++) {
+          decrypted += String.fromCharCode((text.charCodeAt(i) - shift + 256) % 256);
+        }
+        break;
+      case "Reverse Cipher":
+        decrypted = text.split("").reverse().join("");
+        break;
+      default:
+        decrypted = text; // In case no decryption method is selected
+        break;
     }
     setPlainText(decrypted);
   };
@@ -57,12 +79,19 @@ const Index = () => {
             </>
           )}
         </Text>
-        <Textarea placeholder="Enter text to encrypt" value={plainText} onChange={(e) => setPlainText(e.target.value)} isDisabled={solution === null} />
-        <Button leftIcon={<FaLock />} colorScheme="green" onClick={() => encryptText(plainText, solution)} isDisabled={solution === null}>
+        <Select placeholder="Select Encryption Method" onChange={(e) => setEncryptionMethod(e.target.value)} isDisabled={solution === null}>
+          {encryptionMethods.map((method) => (
+            <option key={method} value={method}>
+              {method}
+            </option>
+          ))}
+        </Select>
+        <Textarea placeholder="Enter text to encrypt" value={plainText} onChange={(e) => setPlainText(e.target.value)} isDisabled={solution === null || encryptionMethod === ""} />
+        <Button leftIcon={<FaLock />} colorScheme="green" onClick={() => encryptText(plainText, solution, encryptionMethod)} isDisabled={solution === null || encryptionMethod === ""}>
           Encrypt Text
         </Button>
         <Textarea placeholder="Enter text to decrypt" value={cipherText} onChange={(e) => setCipherText(e.target.value)} isDisabled={solution === null} />
-        <Button leftIcon={<FaUnlock />} colorScheme="orange" onClick={() => decryptText(cipherText, solution)} isDisabled={solution === null}>
+        <Button leftIcon={<FaUnlock />} colorScheme="orange" onClick={() => decryptText(cipherText, solution, encryptionMethod)} isDisabled={solution === null || encryptionMethod === ""}>
           Decrypt Text
         </Button>
         <Box>
