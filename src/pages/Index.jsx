@@ -50,17 +50,18 @@ const Index = () => {
     return `lattice-${text}`;
   };
 
-  // Updated encryption function that uses the selected encryption method and key
-  const encryptText = (text, k, method) => {
-    // Convert input text to Unicode numbers
-    const t = text
+  // Updated encryption function utilizing variables k and t
+  const encryptText = (k, method) => {
+    // Convert input text to Unicode numbers (variable t)
+    const t = plainText
       .split("")
       .map((char) => char.charCodeAt(0))
       .join(" ");
-    let encrypted = "";
+    let encrypted;
     switch (method) {
       case "Shift Cipher":
         encrypted = t
+          .split(" ")
           .split(" ")
           .map((num) => String.fromCharCode((parseInt(num, 10) + parseInt(k, 10)) % 256))
           .join("");
@@ -76,22 +77,14 @@ const Index = () => {
   };
   // Removed the duplicate definition of encryptText function
 
-  // Updated decryption function that uses the selected encryption method and key
-  const decryptText = (text, k, method) => {
-    let shift = parseInt(k, 10) || 0;
-    let decrypted = "";
+  // Updated decryption function utilizing variables k and t
+  const decryptText = (k, method) => {
+    // Convert encrypted text to Unicode numbers (variable t)
+    const t = cipherText;
+    let decrypted;
     switch (method) {
       case "Shift Cipher":
-        for (let i = 0; i < text.length; i++) {
-          decrypted += String.fromCharCode((text.charCodeAt(i) - shift + 256) % 256);
-        }
-        break;
-      case "Reverse Cipher":
-        decrypted = text.split("").reverse().join("");
-        break;
-      default:
-        decrypted = text; // In case no decryption method is selected
-        break;
+        decrypted = t.split(" ");
     }
     setPlainText(decrypted);
   };
