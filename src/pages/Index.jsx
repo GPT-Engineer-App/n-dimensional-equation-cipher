@@ -3,7 +3,7 @@ import { FaLock, FaUnlock } from "react-icons/fa";
 import { useState } from "react";
 
 const Index = () => {
-  const encryptionMethods = ["Shift Cipher", "Reverse Cipher"];
+  const encryptionMethods = ["Shift Cipher", "Reverse Cipher", "RSA Cipher", "Lattice Cipher"];
   const [equation, setEquation] = useState("");
   const [solution, setSolution] = useState(null);
   const [cipherText, setCipherText] = useState("");
@@ -26,25 +26,49 @@ const Index = () => {
     });
   };
 
+  // Mock RSA encryption function
+  const rsaEncrypt = (text, key) => {
+    // This is a simple mock and does not represent actual RSA encryption
+    return `rsa-${text}`;
+  };
+
+  // Mock Lattice encryption function
+  const latticeEncrypt = (text, key) => {
+    // This is a simple mock and does not represent actual Lattice encryption
+    return `lattice-${text}`;
+  };
+
   // Updated encryption function that uses the selected encryption method and key
   const encryptText = (text, key, method) => {
-    let shift = parseInt(key, 10) || 0;
+    // Convert input text to Unicode numbers
+    const unicodeText = text
+      .split("")
+      .map((char) => char.charCodeAt(0))
+      .join(" ");
     let encrypted = "";
     switch (method) {
       case "Shift Cipher":
-        for (let i = 0; i < text.length; i++) {
-          encrypted += String.fromCharCode((text.charCodeAt(i) + shift) % 256);
-        }
+        encrypted = unicodeText
+          .split(" ")
+          .map((num) => String.fromCharCode((parseInt(num, 10) + parseInt(key, 10)) % 256))
+          .join("");
         break;
       case "Reverse Cipher":
-        encrypted = text.split("").reverse().join("");
+        encrypted = unicodeText.split("").reverse().join("");
+        break;
+      case "RSA Cipher":
+        encrypted = rsaEncrypt(unicodeText, key);
+        break;
+      case "Lattice Cipher":
+        encrypted = latticeEncrypt(unicodeText, key);
         break;
       default:
-        encrypted = text; // In case no encryption method is selected
+        encrypted = unicodeText; // In case no encryption method is selected
         break;
     }
     setCipherText(encrypted);
   };
+  // Removed the duplicate definition of encryptText function
 
   // Updated decryption function that uses the selected encryption method and key
   const decryptText = (text, key, method) => {
@@ -82,9 +106,9 @@ const Index = () => {
             </>
           )}
         </Text>
-        <Select placeholder="Select Encryption Method" onChange={(e) => setEncryptionMethod(e.target.value)} isDisabled={solution === null}>
-          {encryptionMethods.map((method) => (
-            <option key={method} value={method}>
+        <Select placeholder="Select Encryption Method" value={encryptionMethod} onChange={(e) => setEncryptionMethod(e.target.value)}>
+          {encryptionMethods.map((method, index) => (
+            <option key={index} value={method}>
               {method}
             </option>
           ))}
