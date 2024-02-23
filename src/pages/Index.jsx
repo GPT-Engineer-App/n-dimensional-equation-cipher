@@ -50,10 +50,8 @@ const Index = () => {
     return `lattice-${text}`;
   };
 
-  // Updated encryption function utilizing variables k and t
-  const encryptText = (k, method) => {
-    // Convert input text to Unicode numbers (variable t)
-    const t = plainText
+  const encryptText = (text, key, method) => {
+    const t = text
       .split("")
       .map((char) => char.charCodeAt(0))
       .join(" ");
@@ -62,30 +60,26 @@ const Index = () => {
       case "Shift Cipher":
         encrypted = t
           .split(" ")
-          .split(" ")
-          .map((num) => String.fromCharCode((parseInt(num, 10) + parseInt(k, 10)) % 256))
+          .map((num) => String.fromCharCode((parseInt(num, 10) + parseInt(key, 10)) % 256))
           .join("");
         break;
       case "Reverse Cipher":
-        encrypted = t.split(" ").reverse().join("");
+        encrypted = t.split(" ").reverse().join(" ");
         break;
-      default:
-        encrypted = t; // In case no encryption method is selected
+      case "RSA Cipher":
+        encrypted = rsaEncrypt(text, key);
+        break;
+      case "Lattice Cipher":
+        encrypted = latticeEncrypt(text, key);
         break;
     }
     setCipherText(encrypted);
   };
   // Removed the duplicate definition of encryptText function
 
-  // Updated decryption function utilizing variables k and t
-  const decryptText = (k, method) => {
-    // Convert encrypted text to Unicode numbers (variable t)
-    const t = cipherText;
-    let decrypted;
-    switch (method) {
-      case "Shift Cipher":
-        decrypted = t.split(" ");
-    }
+  const decryptText = (text, key, method) => {
+    let decrypted = text; // Placeholder for decrypted text
+    // Placeholder logic for decryption, as the actual decryption logic is not implemented in this example
     setPlainText(decrypted);
   };
 
