@@ -12,18 +12,30 @@ const Index = () => {
   const [encryptionMethod, setEncryptionMethod] = useState(encryptionMethods[0]);
   const toast = useToast();
 
-  // Dummy function to 'solve' an equation (for demonstration purposes)
-  const solveEquation = (equation) => {
-    // The 'solution' would be the length of the equation string for this example
-    const solution = equation.length;
-    setSolution(solution);
-    toast({
-      title: "Equation Solved",
-      description: `The solution is: ${solution}`,
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
+  // Function to calculate a simple mathematical expression
+  const solveEquation = (eq) => {
+    try {
+      // Evaluate the equation as a JavaScript expression
+      // Note: This is not safe or recommended for production use!
+      // It is only for demonstration purposes as we're not allowed to use external libraries
+      const solution = Function('"use strict";return (' + eq + ")")();
+      setSolution(solution);
+      toast({
+        title: "Equation Solved",
+        description: `The solution is: ${solution}`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error Solving Equation",
+        description: "There was an error evaluating the equation. Please check the syntax.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   // Mock RSA encryption function
